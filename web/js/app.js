@@ -143,7 +143,7 @@ async function refreshServerStats() {
 // ---------------------------------------------------------------- lateral
 function renderSide() {
   const v = S.view;
-  $("#side").innerHTML = `<div class="side-head"><i class="i i-server"></i>Piphin Server</div>
+  $("#side").innerHTML = `<div class="side-head"><i class="i i-server"></i>Arasaka Datafort</div>
     <div class="side-list">
       ${S.nodes.map((n) => `<button class="side-node ${v.kind === "node" && v.node === n.id ? "on" : ""}" data-node="${n.id}"><span class="dot ${n.online ? "on" : ""}"></span><span class="nm" data-noi18n>${esc(n.name)}</span><i class="i i-hard-drive"></i></button>
         ${srvList(n.id).map((s) => `<button class="side-srv ${v.kind === "server" && v.server === s.id ? "on" : ""}" data-node="${n.id}" data-srv="${s.id}" title="${esc(STATE[s.state] || s.state)}"><span class="dot ${s.state}"></span><span class="nm" data-noi18n>${esc(s.name)}</span></button>`).join("")}`).join("")}
@@ -174,12 +174,12 @@ function home() {
       <div class="srv-grid">${all.map((s) => srvCard(s, s.n)).join("")}${S.nodes.map((n) => `<div class="srv-card add" data-act="new-server" data-node-id="${n.id}"><i class="i i-plus"></i><b>Novo servidor</b><span class="meta" data-noi18n>${esc(n.name)}</span></div>`).join("")}</div>`;
   }
   return `<div class="welcome"><div class="hero"><div class="ic"><i class="i i-server"></i></div><h1>Seus próprios servidores</h1>
-      <p>Transforme um PC com Ubuntu Server da sua rede numa máquina de hospedagem: servidores de Minecraft, Terraria e Valheim, bots do Discord, sites, APIs e bancos de dados. Cada servidor roda isolado (Docker), com console, arquivos, backups e agendamentos aqui no Hub.</p></div>
+      <p>Transforme um PC com Ubuntu Server da sua rede numa máquina de hospedagem: servidores de Minecraft, Terraria e Valheim, bots do Discord, sites, APIs e bancos de dados. Cada servidor roda isolado (Docker), com console, arquivos, backups e agendamentos aqui na Central.</p></div>
     ${addNodeSteps()}</div>`;
 }
 function addNodeSteps() {
   return `<div class="card"><div class="steps">
-    <div class="step"><div><b>Instale o Piphin Agent no Ubuntu Server</b><p class="faint" style="margin:4px 0 10px">No terminal da máquina (ou por SSH), rode este comando. Ele instala o Docker se faltar, o agente e mostra um código.</p>
+    <div class="step"><div><b>Instale o Datafort Agent no Ubuntu Server</b><p class="faint" style="margin:4px 0 10px">No terminal da máquina (ou por SSH), rode este comando. Ele instala o Docker se faltar, o agente e mostra um código.</p>
       <div class="cmdbox"><code id="installCmd" data-noi18n>...</code><button class="btn sm" data-act="copy-install"><i class="i i-copy"></i>Copiar</button></div></div></div>
     <div class="step"><div><b>Encontre a máquina</b><p class="faint" style="margin:4px 0 10px">Ela aparece aqui se estiver na mesma rede. Ou digite o endereço mostrado pelo instalador.</p>
       <div class="row" style="margin-bottom:10px"><button class="btn" data-act="discover"><i class="i i-radar"></i>Procurar na rede</button><span class="faint" id="discStatus"></span></div>
@@ -201,7 +201,7 @@ function nodeView() {
   const i = S.nodeInfo, list = srvList(n.id);
   return `<div class="head"><div class="ic"><i class="i i-hard-drive"></i></div>
       <div class="grow"><h1 class="t" data-noi18n>${esc(n.name)}</h1><div class="sub"><span class="pill ${n.online ? "running" : "offline"}">${n.online ? "Online" : "Fora do ar"}</span>
-        <span class="mono" data-noi18n>${esc(n.host)}:${n.port}</span>${i ? `<span>Piphin Agent ${esc(i.version)}</span>` : ""}</div></div>
+        <span class="mono" data-noi18n>${esc(n.host)}:${n.port}</span>${i ? `<span>Datafort Agent ${esc(i.version)}</span>` : ""}</div></div>
       ${n.online ? "" : `<button class="btn violet" data-m="wake"><i class="i i-power"></i>Ligar pela rede</button>`}
       <button class="btn" data-act="rename-node"><i class="i i-pencil"></i>Renomear</button>
       <button class="btn ghost" data-act="remove-node" title="Esquecer esta máquina"><i class="i i-trash-2"></i></button></div>
@@ -353,7 +353,7 @@ function schedulesTab() {
   const list = S.srv.schedules || [];
   return `<div class="card"><div class="row" style="margin-bottom:12px"><h3 class="h grow" style="margin:0"><i class="i i-calendar-clock"></i>Agendamentos</h3>
       <button class="btn violet" data-act="add-schedule"><i class="i i-plus"></i>Novo agendamento</button></div>
-    <p class="faint" style="margin:0 0 10px">Tarefas que a máquina faz sozinha, mesmo com o Hub fechado: reiniciar toda madrugada, backup diário, avisos no chat...</p>
+    <p class="faint" style="margin:0 0 10px">Tarefas que a máquina faz sozinha, mesmo com a Central fechado: reiniciar toda madrugada, backup diário, avisos no chat...</p>
     ${!list.length ? `<div class="empty">Nenhum agendamento.</div>` : `<table class="table"><thead><tr><th>Quando</th><th>O que faz</th><th>Próxima vez</th><th></th></tr></thead><tbody>
       ${list.map((j) => `<tr><td>${esc(describe(j.cron))}<div class="faint mono" data-noi18n>${esc(j.cron)}</div></td><td>${esc(ACTIONS[j.action] || j.action)}${j.action === "command" ? `<div class="faint mono" data-noi18n>${esc(j.payload)}</div>` : ""}</td>
         <td data-next="${esc(j.cron)}" class="faint">${j.enabled ? "..." : "pausado"}</td>
@@ -600,7 +600,7 @@ document.addEventListener("click", guard(async (e) => {
   if (act === "rename-node") { const n = curNode(), name = await promptBox("Renomear máquina", "Nome", n.name); if (!name) return; await call("node-rename", { id: n.id, name }); await loadNodes(); return renderMain(); }
   if (act === "remove-node") {
     const n = curNode();
-    if (!(await confirmBox(`Esquecer "${n.name}"?`, "O Hub para de mostrar esta máquina e tira o acesso dele. Os servidores continuam rodando nela.", "Esquecer", true))) return;
+    if (!(await confirmBox(`Esquecer "${n.name}"?`, "A Central para de mostrar esta máquina e tira o acesso dele. Os servidores continuam rodando nela.", "Esquecer", true))) return;
     await call("node-remove", n.id); await loadNodes(); return show("home");
   }
   if (act === "new-folder") { const name = await promptBox("Nova pasta", "Nome da pasta"); if (!name) return; await call("file-mkdir", { node: S.view.node, server: S.view.server, path: path(S.filesPath, name) }); return loadFiles(S.filesPath); }

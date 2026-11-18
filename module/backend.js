@@ -80,10 +80,10 @@ exports.activate = (ctx) => {
     const tmp = { host, port: Number(port) || 8443 };
     // primeiro contato: pega o certificado (confiança no primeiro uso, confirmada pelo código de uso único)
     const hello = await call(tmp, "GET", "/api/hello", null, { fingerprint: "*", auth: false, timeout: 8000 });
-    if (!hello.body || hello.body.agent !== "piphin") throw new Error("Nesse endereço não tem um Piphin Agent");
+    if (!hello.body || hello.body.agent !== "piphin") throw new Error("Nesse endereço não tem um Datafort Agent");
     const fp = hello.cert && hello.cert.fingerprint256;
     if (!fp || fp !== hello.body.fingerprint) throw new Error("O certificado da máquina não confere");
-    const r = (await call(tmp, "POST", "/api/pair", { code: String(code || "").trim(), client: `Piphin Hub (${os.hostname()})` }, { fingerprint: fp, auth: false })).body;
+    const r = (await call(tmp, "POST", "/api/pair", { code: String(code || "").trim(), client: `Arasaka Central (${os.hostname()})` }, { fingerprint: fp, auth: false })).body;
     const existing = nodes.find((n) => n.host === tmp.host && n.port === tmp.port);
     const n = { id: existing ? existing.id : crypto.randomBytes(4).toString("hex"), name: r.name, host: tmp.host, port: tmp.port, fingerprint: fp, token: r.token, clientId: r.clientId, version: r.version, addedAt: Date.now() };
     nodes = nodes.filter((x) => x !== existing).concat(n);

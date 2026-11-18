@@ -27,7 +27,7 @@ function machineBody() {
 function updateFirstCard() {
   const cmd = "curl -fsSL https://github.com/Ruiso-Outside/Piphin-Server/releases/latest/download/install.sh | sudo bash";
   return `<div class="card"><h3 class="h"><i class="i i-circle-arrow-up"></i>Atualize o agente uma última vez pelo Ubuntu</h3>
-    <p class="muted">Esta máquina está com o agente <span data-noi18n>${esc(agentVersion())}</span>. Rode este comando no Ubuntu. Os servidores continuam ligados. Depois disso, as próximas atualizações saem daqui do Hub, com um clique.</p>
+    <p class="muted">Esta máquina está com o agente <span data-noi18n>${esc(agentVersion())}</span>. Rode este comando no Ubuntu. Os servidores continuam ligados. Depois disso, as próximas atualizações saem daqui da Central, com um clique.</p>
     <div class="cmdbox"><code data-noi18n>${esc(cmd)}</code><button class="btn sm" data-copy="${esc(cmd)}"><i class="i i-copy"></i>Copiar</button></div></div>`;
 }
 // depois de desenhar a tela
@@ -148,7 +148,7 @@ function drawCharts() {
 function systemTab() {
   const o = M.over;
   return `<div class="m-grid">
-    <div class="card"><h3 class="h"><i class="i i-circle-arrow-up"></i>Piphin Agent</h3><div id="sysAgent">${empty(`<span class="spin"></span>`)}</div></div>
+    <div class="card"><h3 class="h"><i class="i i-circle-arrow-up"></i>Datafort Agent</h3><div id="sysAgent">${empty(`<span class="spin"></span>`)}</div></div>
     <div class="card"><h3 class="h"><i class="i i-power"></i>Energia</h3>
       <p class="faint" style="margin-top:0">Os servidores param do jeito certo antes. Os que estavam ligados voltam sozinhos quando a máquina voltar.</p>
       <div class="row" style="flex-wrap:wrap"><button class="btn" data-m="power" data-v="reboot"><i class="i i-rotate-ccw"></i>Reiniciar a máquina</button><button class="btn danger" data-m="power" data-v="poweroff"><i class="i i-power"></i>Desligar a máquina</button></div>
@@ -214,12 +214,12 @@ function paintId() {
     <label>Fuso horário<div class="row"><select id="sysTz" class="grow" data-noi18n>${(M.tz && M.tz.length ? M.tz : [o.timezone]).map((z) => `<option ${z === o.timezone ? "selected" : ""}>${esc(z)}</option>`).join("")}</select><button class="btn" data-m="set-tz">Salvar</button></div><span class="hint">Os agendamentos dos servidores seguem este horário.</span></label>
     <span class="faint">${o.ntp ? "O relógio está sincronizado pela internet." : "O relógio não está sincronizado pela internet."}</span></div>`;
   const hint = $("#wolHint");
-  if (hint) hint.textContent = o.mac ? "Para ligar de novo pelo Hub, ative o Wake-on-LAN na BIOS da máquina." : "";
+  if (hint) hint.textContent = o.mac ? "Para ligar de novo pela Central, ative o Wake-on-LAN na BIOS da máquina." : "";
 }
 function paintHubs() {
   const el = $("#sysHubs"), i = S.nodeInfo; if (!el || !i) return;
   el.innerHTML = `<table class="m-table"><tbody>${i.clients.map((c) => `<tr><td data-noi18n>${esc(c.name)}</td><td class="faint">${c.lastUsed ? new Date(c.lastUsed).toLocaleString() : ""}</td></tr>`).join("")}</tbody></table>
-    <div class="row" style="margin-top:12px"><button class="btn" data-m="pair-code"><i class="i i-key"></i>Código para outro Hub</button><b class="mono" id="newCode" data-noi18n></b></div>`;
+    <div class="row" style="margin-top:12px"><button class="btn" data-m="pair-code"><i class="i i-key"></i>Código para outra Central</button><b class="mono" id="newCode" data-noi18n></b></div>`;
 }
 
 // ---------------------------------------------------------------- serviços
@@ -305,7 +305,7 @@ const loadLogs = guard(async () => {
 // ---------------------------------------------------------------- terminal
 const TERMS = {}; // máquina -> { list: [{ sid, term, fit, host, title, lost }], active }
 const termsOf = (id) => (TERMS[id] = TERMS[id] || { list: [], active: null, checked: false });
-const TERM_THEME = { background: "#0b0b12", foreground: "#e6e6f0", cursor: "#a78bfa", selectionBackground: "rgba(129,140,248,.35)", black: "#1b1b26", red: "#f87171", green: "#4ade80", yellow: "#fbbf24", blue: "#60a5fa", magenta: "#c084fc", cyan: "#22d3ee", white: "#e6e6f0", brightBlack: "#6b7280", brightRed: "#fca5a5", brightGreen: "#86efac", brightYellow: "#fde047", brightBlue: "#93c5fd", brightMagenta: "#d8b4fe", brightCyan: "#67e8f9", brightWhite: "#ffffff" };
+const TERM_THEME = { background: "#0b0b12", foreground: "#e6e6f0", cursor: "#a78bfa", selectionBackground: "rgba(129,140,248,.35)", black: "#1b1b26", red: "#f87171", green: "#4ade80", yellow: "#fbbf24", blue: "#60a5fa", magenta: "#ff5252", cyan: "#22d3ee", white: "#e6e6f0", brightBlack: "#6b7280", brightRed: "#fca5a5", brightGreen: "#86efac", brightYellow: "#fde047", brightBlue: "#93c5fd", brightMagenta: "#d8b4fe", brightCyan: "#67e8f9", brightWhite: "#ffffff" };
 function terminalTab() { return `<div class="term-tabs" id="termTabs"></div><div id="termBox" data-noi18n></div><p class="faint" style="margin:8px 0 0">Terminal de administrador (root) da máquina, pela conexão segura do agente, sem senha. Copiar: Ctrl+Shift+C ou selecionar e clicar com o botão direito. Colar: Ctrl+Shift+V ou botão direito.</p>`; }
 function termCreate(nodeId, sid) {
   const host = document.createElement("div"); host.className = "term-host";
@@ -394,7 +394,7 @@ document.addEventListener("click", guard(async (e) => {
     await sys(`/processes/${a.dataset.pid}/kill`, "POST", { signal: "SIGTERM" }); toast("Pedido enviado", "ok"); return loadProcs();
   }
   if (act === "agent-update") {
-    if (!(await confirmBox("Atualizar o agente?", "O Hub perde o contato por alguns segundos. Os servidores continuam ligados.", "Atualizar", false))) return;
+    if (!(await confirmBox("Atualizar o agente?", "A Central perde o contato por alguns segundos. Os servidores continuam ligados.", "Atualizar", false))) return;
     const before = agentVersion();
     await sys("/agent-update", "POST"); M.agentUpdating = true; paintAgent();
     const t0 = Date.now();

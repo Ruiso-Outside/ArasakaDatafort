@@ -22,7 +22,8 @@ const sh = fs.readFileSync(path.join(root, "agent", "install.sh"), "utf8").repla
 fs.writeFileSync(path.join(root, "dist", "install.sh"), sh);
 
 fs.rmSync(out, { force: true });
-const tar = path.join(process.env.SystemRoot || "C:\\Windows", "System32", "tar.exe");
+// tar do Windows (System32); no Linux, o tar do sistema
+const tar = process.platform === "win32" ? path.join(process.env.SystemRoot || "C:\\Windows", "System32", "tar.exe") : "tar";
 execFileSync(tar, ["-czf", out, "-C", stage, "."], { stdio: "inherit" });
 fs.rmSync(stage, { recursive: true, force: true });
 console.log("agente:", out, `(${(fs.statSync(out).size / 1024).toFixed(0)} KB) · instalador: dist/install.sh`);
