@@ -4,6 +4,21 @@
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
+
+// Pastas do usuário: no Linux seguem o idioma do sistema (~/Imagens, ~/Músicas...) pelo user-dirs.dirs.
+// Se a pasta em inglês já existe (sistema em inglês ou dados de antes), continua nela.
+function userDir(name) { // "Pictures" | "Videos" | "Music" | "Documents" | "Downloads" | "Desktop"
+  const home = os.homedir(), en = path.join(home, name);
+  if (process.platform !== "linux" || fs.existsSync(en)) return en;
+  const key = { Pictures: "PICTURES", Videos: "VIDEOS", Music: "MUSIC", Documents: "DOCUMENTS", Downloads: "DOWNLOAD", Desktop: "DESKTOP" }[name];
+  try {
+    const cfg = fs.readFileSync(path.join(process.env.XDG_CONFIG_HOME || path.join(home, ".config"), "user-dirs.dirs"), "utf8");
+    const m = new RegExp(`^XDG_${key}_DIR="(.+)"`, "m").exec(cfg);
+    const d = m && m[1].replace(/^\$HOME/, home);
+    if (d && path.isAbsolute(d) && d !== home) return d;
+  } catch { /* sem user-dirs.dirs */ }
+  return en;
+}
 const https = require("https");
 const dgram = require("dgram");
 const crypto = require("crypto");
@@ -210,7 +225,7 @@ exports.activate = (ctx) => {
   });
   // baixar um arquivo ou backup para o PC
   async function download(id, apiPath, suggested) {
-    const dest = await ctx.host.saveDialog({ title: "Salvar no PC", defaultPath: path.join(os.homedir(), "Downloads", suggested) });
+    const dest = await ctx.host.saveDialog({ title: "Salvar no PC", defaultPath: path.join(userDir("Downloads"), suggested) });
     if (!dest) return null;
     await call(node(id), "GET", apiPath, null, { timeout: 0, onResponse: (res, resolve, reject) => {
       if (res.statusCode >= 400) { res.resume(); return reject(new Error(`Erro ${res.statusCode}`)); }
