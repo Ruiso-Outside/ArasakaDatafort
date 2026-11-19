@@ -1,6 +1,8 @@
-# Piphin Server
+# Arasaka Datafort
 
-Painel de hospedagem, módulo do [Piphin Hub](https://github.com/Ruiso-Outside/Piphin-Hub). Transforma um PC com **Ubuntu Server** da sua rede numa máquina de hospedagem, parecido com o Pterodactyl: servidores de jogos, bots, sites, APIs e bancos de dados, cada um isolado num contêiner Docker e controlado pelo Hub.
+> Antes chamado **Piphin Server**. Os arquivos, pastas e dados continuam com o nome antigo.
+
+Painel de hospedagem, módulo do [Arasaka Central](https://github.com/Ruiso-Outside/ArasakaCentral). Transforma um PC com **Ubuntu Server** da sua rede numa máquina de hospedagem, parecido com o Pterodactyl: servidores de jogos, bots, sites, APIs e bancos de dados, cada um isolado num contêiner Docker e controlado pelo Hub.
 
 São duas partes:
 
@@ -23,7 +25,7 @@ São duas partes:
 - **Docker**: espaço usado, imagens, contêineres e limpeza
 - **Logs**: os logs do sistema, com filtros
 - **Terminal**: terminal root da máquina dentro do Hub, com várias sessões, cores e programas como `top` e `nano`; a sessão continua por 10 minutos se o Hub desconectar
-- **IA**: com o Piphin LLM, a IA vê as máquinas e servidores, a saúde de cada máquina, lê o console, liga e desliga e manda comandos (sempre pedindo confirmação para ações). Ferramentas no `module/module.json`
+- **IA**: com o Arasaka Mikoshi, a IA vê as máquinas e servidores, a saúde de cada máquina, lê o console, liga e desliga e manda comandos (sempre pedindo confirmação para ações). Ferramentas no `module/module.json`
 
 ## Modelos
 
@@ -74,7 +76,7 @@ Eggs importados ficam em `/var/lib/piphin-agent/eggs`. Os textos dos eggs vêm e
 No terminal do Ubuntu (ou por SSH):
 
 ```bash
-curl -fsSL https://github.com/Ruiso-Outside/Piphin-Server/releases/latest/download/install.sh | sudo bash
+curl -fsSL https://github.com/Ruiso-Outside/ArasakaDatafort/releases/latest/download/install.sh | sudo bash
 ```
 
 O instalador:
@@ -85,7 +87,7 @@ O instalador:
 4. libera as portas 8443/tcp (painel) e 8444/udp (descoberta) no ufw, se ele estiver ligado
 5. mostra o código de pareamento
 
-Depois, no Hub, abra o Piphin Server, clique em **Procurar na rede** e digite o código. Se o roteador der outro IP à máquina, o Hub a acha de novo sozinho na rede, pelo certificado. Para desinstalar: `sudo bash install.sh --uninstall`.
+Depois, no Hub, abra o Arasaka Datafort, clique em **Procurar na rede** e digite o código. Se o roteador der outro IP à máquina, o Hub a acha de novo sozinho na rede, pelo certificado. Para desinstalar: `sudo bash install.sh --uninstall`.
 
 Para atualizar o agente, rode o mesmo comando de instalação de novo: os servidores continuam ligados, e a configuração e o pareamento são mantidos.
 
@@ -103,7 +105,7 @@ sudo piphin-agent revoke ID # tira o acesso de um Hub
 - Tudo passa por HTTPS. O Hub guarda a impressão digital do certificado no pareamento e, antes de mandar qualquer coisa, confere se é a mesma. Se não for, a conexão é cortada e o token não sai do PC
 - Um Hub pareado é administrador da máquina (root): tem terminal, atualiza o sistema e desliga. Pareie só os seus. Para tirar o terminal de uma máquina, coloque `"terminal": false` em `/etc/piphin-agent/config.json` e reinicie o serviço
 - As ações na máquina (terminal aberto, serviços, firewall, energia) ficam no log do agente: `journalctl -u piphin-agent`
-- A IA do Piphin LLM não tem acesso ao terminal nem às ações da máquina, só à leitura da saúde
+- A IA do Arasaka Mikoshi não tem acesso ao terminal nem às ações da máquina, só à leitura da saúde
 - O pareamento usa um código de 8 letras, de uso único, que só aparece no terminal da máquina. 5 tentativas erradas bloqueiam o IP por 15 minutos
 - O agente guarda só o hash dos tokens dos Hubs
 - Os arquivos de cada servidor ficam presos na pasta dele (links que saem dela são recusados)

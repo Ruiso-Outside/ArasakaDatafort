@@ -10,7 +10,7 @@ const PROC = process.env.PIPHIN_PROC || "/proc";
 const SYS = process.env.PIPHIN_SYS || "/sys";
 const FAKE_CMD = process.env.PIPHIN_FAKE_CMD; // só nos testes: um script no lugar de systemctl, apt, ufw...
 const REBOOT_FLAG = process.env.PIPHIN_REBOOT_FLAG || "/var/run/reboot-required";
-const INSTALL_URL = "https://github.com/Ruiso-Outside/Piphin-Server/releases/latest/download/install.sh";
+const INSTALL_URL = "https://github.com/Ruiso-Outside/ArasakaDatafort/releases/latest/download/install.sh";
 const ENV = { ...process.env, LC_ALL: "C", LANG: "C", DEBIAN_FRONTEND: "noninteractive", NEEDRESTART_MODE: "l", PATH: `${process.env.PATH || ""}:/usr/sbin:/sbin:/usr/bin:/bin` };
 
 const read = (f) => { try { return fs.readFileSync(f, "utf8"); } catch { return ""; } };

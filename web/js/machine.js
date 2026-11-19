@@ -25,7 +25,7 @@ function machineBody() {
 }
 // agente antigo: as outras abas precisam da versão nova. Esta é a última vez que precisa ir ao Ubuntu
 function updateFirstCard() {
-  const cmd = "curl -fsSL https://github.com/Ruiso-Outside/Piphin-Server/releases/latest/download/install.sh | sudo bash";
+  const cmd = "curl -fsSL https://github.com/Ruiso-Outside/ArasakaDatafort/releases/latest/download/install.sh | sudo bash";
   return `<div class="card"><h3 class="h"><i class="i i-circle-arrow-up"></i>Atualize o agente uma última vez pelo Ubuntu</h3>
     <p class="muted">Esta máquina está com o agente <span data-noi18n>${esc(agentVersion())}</span>. Rode este comando no Ubuntu. Os servidores continuam ligados. Depois disso, as próximas atualizações saem daqui da Central, com um clique.</p>
     <div class="cmdbox"><code data-noi18n>${esc(cmd)}</code><button class="btn sm" data-copy="${esc(cmd)}"><i class="i i-copy"></i>Copiar</button></div></div>`;

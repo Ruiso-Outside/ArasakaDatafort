@@ -25,7 +25,7 @@ const crypto = require("crypto");
 const { StringDecoder } = require("string_decoder");
 const { PinnedAgent } = require("./pinned");
 
-const INSTALL_CMD = "curl -fsSL https://github.com/Ruiso-Outside/Piphin-Server/releases/latest/download/install.sh | sudo bash";
+const INSTALL_CMD = "curl -fsSL https://github.com/Ruiso-Outside/ArasakaDatafort/releases/latest/download/install.sh | sudo bash";
 
 exports.activate = (ctx) => {
   const FILE = path.join(ctx.dataDir, "nodes.json");
@@ -339,7 +339,7 @@ exports.activate = (ctx) => {
   let latest = { at: 0, version: null };
   ctx.handle("agent-latest", async () => {
     if (Date.now() - latest.at < 3600000 && latest.version) return latest.version;
-    const r = await fetch("https://github.com/Ruiso-Outside/Piphin-Server/releases/latest", { redirect: "manual", headers: { "User-Agent": "Piphin-Hub" } });
+    const r = await fetch("https://github.com/Ruiso-Outside/ArasakaDatafort/releases/latest", { redirect: "manual", headers: { "User-Agent": "Piphin-Hub" } });
     const m = /\/tag\/v([\d.]+)$/.exec(r.headers.get("location") || "");
     if (!m) throw new Error("Não deu para ver a versão mais nova");
     latest = { at: Date.now(), version: m[1] };

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Piphin Agent · instalador para Ubuntu Server (e Debian). Rodar como root:
-#   curl -fsSL https://github.com/Ruiso-Outside/Piphin-Server/releases/latest/download/install.sh | sudo bash
+#   curl -fsSL https://github.com/Ruiso-Outside/ArasakaDatafort/releases/latest/download/install.sh | sudo bash
 # Rodar de novo atualiza o agente (os servidores e os dados ficam). Para desinstalar: sudo bash install.sh --uninstall
 set -euo pipefail
 
-REPO="Ruiso-Outside/Piphin-Server"
+REPO="Ruiso-Outside/ArasakaDatafort"
 BASE="${PIPHIN_BASE:-https://github.com/$REPO/releases/latest/download}"
 APP=/opt/piphin-agent
 ETC=/etc/piphin-agent
